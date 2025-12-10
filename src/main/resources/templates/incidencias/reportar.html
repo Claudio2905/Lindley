@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::content})}">
+<head>
+    <title>Reportar Incidencia</title>
+</head>
+<body>
+<div th:fragment="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header card-header-custom">
+                    <i class="fas fa-exclamation-triangle"></i> Reportar Incidencia
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Importante:</strong> Reporte cualquier problema ocurrido durante la entrega o recepción de productos.
+                    </div>
+
+                    <form th:action="@{/incidencias/reportar}" method="post">
+                        <div class="row g-3">
+                            <!-- Código de Pedido -->
+                            <div class="col-md-3">
+                                <label class="form-label">
+                                    <i class="fas fa-hashtag"></i> Código de Pedido *
+                                </label>
+                                <input type="number" class="form-control"
+                                       name="idPedido"
+                                       placeholder="Ej: 123"
+                                       required>
+                            </div>
+
+                            <!-- Tipo de Incidencia -->
+                            <div class="col-md-3">
+                                <label class="form-label">
+                                    <i class="fas fa-list"></i> Tipo de Incidencia *
+                                </label>
+                                <select class="form-select" name="tipoIncidencia" required>
+                                    <option value="">Seleccione...</option>
+                                    <option value="Producto Dañado">Producto Dañado</option>
+                                    <option value="Producto Faltante">Producto Faltante</option>
+                                    <option value="Dirección Incorrecta">Dirección Incorrecta</option>
+                                    <option value="Cliente Ausente">Cliente Ausente</option>
+                                    <option value="Retraso en Entrega">Retraso en Entrega</option>
+                                    <option value="Rechazo de Pedido">Rechazo de Pedido</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                            </div>
+
+                            <!-- Fecha de Registro -->
+                            <div class="col-md-3">
+                                <label class="form-label">
+                                    <i class="fas fa-calendar"></i> Fecha de Registro
+                                </label>
+                                <input type="text" class="form-control"
+                                       th:value="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy HH:mm')}"
+                                       readonly>
+                            </div>
+
+                            <!-- Descripción -->
+                            <div class="col-md-12">
+                                <label class="form-label">
+                                    <i class="fas fa-comment"></i> Descripción Detallada *
+                                </label>
+                                <textarea class="form-control"
+                                          name="descripcion"
+                                          rows="4"
+                                          placeholder="Describa detalladamente la incidencia..."
+                                          required></textarea>
+                            </div>
+
+                            <!-- Botón -->
+                            <div class="col-md-12 text-end">
+                                <button type="reset" class="btn btn-secondary">
+                                    <i class="fas fa-undo"></i> Limpiar
+                                </button>
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-exclamation-circle"></i> Reportar Incidencia
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Incidencias Recientes -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header card-header-custom">
+                    <i class="fas fa-history"></i> Incidencias Recientes
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Entrega</th>
+                                <th>Tipo</th>
+                                <th>Descripción</th>
+                                <th>Fecha Registro</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:if="${incidencias.empty}">
+                                <td colspan="6" class="text-center text-muted">
+                                    <i class="fas fa-inbox"></i> No hay incidencias registradas
+                                </td>
+                            </tr>
+                            <tr th:each="i : ${incidencias}">
+                                <td>
+                                    <strong th:text="'#' + ${i.idIncidencia}">001</strong>
+                                </td>
+                                <td>
+                                    <span class="badge bg-info" th:text="'Entrega #' + ${i.idEntrega}">Entrega #1</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-warning" th:text="${i.tipoIncidencia}">Tipo</span>
+                                </td>
+                                <td>
+                                    <small th:text="${#strings.abbreviate(i.descripcion, 50)}">Descripción...</small>
+                                </td>
+                                <td th:text="${#temporals.format(i.fechaRegistro, 'dd/MM/yyyy HH:mm')}">
+                                    01/12/2025
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

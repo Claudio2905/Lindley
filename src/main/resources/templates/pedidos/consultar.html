@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::content})}">
+<head>
+    <title>Consultar Órdenes</title>
+</head>
+<body>
+<div th:fragment="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header card-header-custom">
+                    <i class="fas fa-clipboard-list"></i> Consultar Órdenes de Distribución
+                </div>
+                <div class="card-body">
+                    <!-- Formulario de búsqueda -->
+                    <form th:action="@{/pedidos/consultar}" method="get">
+                        <div class="row g-3 align-items-end">
+                            <div class="col-md-3">
+                                <label class="form-label">
+                                    <i class="fas fa-hashtag"></i> Código de Pedido
+                                </label>
+                                <input type="number" class="form-control"
+                                       name="codigo" th:value="${param.codigo}"
+                                       placeholder="Ingrese código...">
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label">
+                                    <i class="fas fa-filter"></i> Estado
+                                </label>
+                                <select class="form-select" name="estado">
+                                    <option value="">Todos los estados</option>
+                                    <option value="Pendiente" th:selected="${param.estado == 'Pendiente'}">Pendiente</option>
+                                    <option value="En Proceso" th:selected="${param.estado == 'En Proceso'}">En Proceso</option>
+                                    <option value="Completado" th:selected="${param.estado == 'Completado'}">Completado</option>
+                                    <option value="Cancelado" th:selected="${param.estado == 'Cancelado'}">Cancelado</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary-custom w-100">
+                                    <i class="fas fa-search"></i> Buscar
+                                </button>
+                            </div>
+
+                            <div class="col-md-2">
+                                <a href="/lindley/pedidos/consultar" class="btn btn-secondary w-100">
+                                    <i class="fas fa-redo"></i> Limpiar
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resultados -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header card-header-custom">
+                    <i class="fas fa-list"></i> Órdenes de Distribución
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Cliente</th>
+                                <th>Fecha Pedido</th>
+                                <th class="text-end">Total</th>
+                                <th class="text-center">Estado</th>
+                                <th class="text-center">Observaciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:if="${pedidos.empty}">
+                                <td colspan="6" class="text-center text-muted">
+                                    <i class="fas fa-inbox"></i> No se encontraron órdenes
+                                </td>
+                            </tr>
+                            <tr th:each="p : ${pedidos}">
+                                <td>
+                                    <strong th:text="'#' + ${p.idPedido}">001</strong>
+                                </td>
+                                <td th:text="${p.idCliente}">Cliente</td>
+                                <td th:text="${#temporals.format(p.fechaPedido, 'dd/MM/yyyy HH:mm')}">
+                                    01/12/2025
+                                </td>
+                                <td class="text-end">
+                                    <strong th:text="'S/ ' + ${#numbers.formatDecimal(p.total, 1, 2)}">S/ 100.00</strong>
+                                </td>
+                                <td class="text-center">
+                                    <span th:if="${p.estadoPedido == 'Pendiente'}" class="badge bg-warning">
+                                        <i class="fas fa-clock"></i> Pendiente
+                                    </span>
+                                    <span th:if="${p.estadoPedido == 'En Proceso'}" class="badge bg-info">
+                                        <i class="fas fa-spinner"></i> En Proceso
+                                    </span>
+                                    <span th:if="${p.estadoPedido == 'Completado'}" class="badge bg-success">
+                                        <i class="fas fa-check"></i> Completado
+                                    </span>
+                                    <span th:if="${p.estadoPedido == 'Cancelado'}" class="badge bg-danger">
+                                        <i class="fas fa-times"></i> Cancelado
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <span th:if="${p.observaciones != null}"
+                                          class="badge bg-secondary"
+                                          th:attr="title=${p.observaciones}">
+                                        <i class="fas fa-comment"></i>
+                                    </span>
+                                    <span th:if="${p.observaciones == null}" class="text-muted">-</span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

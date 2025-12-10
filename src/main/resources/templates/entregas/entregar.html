@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::content})}">
+<head>
+    <title>Entrega de Productos</title>
+</head>
+<body>
+<div th:fragment="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header card-header-custom">
+                    <i class="fas fa-shipping-fast"></i> Entrega de Productos
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Proceso de Entrega:</strong> Complete las entregas programadas registrando la confirmación del cliente.
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                            <tr>
+                                <th>ID Entrega</th>
+                                <th>Pedido</th>
+                                <th>Cliente</th>
+                                <th>Dirección</th>
+                                <th>Vehículo</th>
+                                <th>Ruta</th>
+                                <th class="text-center">Estado</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:if="${entregas.empty}">
+                                <td colspan="8" class="text-center text-muted">
+                                    <i class="fas fa-inbox"></i> No hay entregas programadas
+                                </td>
+                            </tr>
+                            <tr th:each="e : ${entregas}">
+                                <td>
+                                    <strong th:text="'#' + ${e.idEntrega}">001</strong>
+                                </td>
+                                <td>
+                                    <span class="badge bg-info" th:text="'Pedido #' + ${e.idPedido}">Pedido #1</span>
+                                </td>
+                                <td>
+                                    <i class="fas fa-user"></i>
+                                    <span th:text="${e.idPedido}">Cliente</span>
+                                </td>
+                                <td>
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <small>Dirección del cliente</small>
+                                </td>
+                                <td th:text="${e.idVehiculo}">ABC-123</td>
+                                <td>
+                                    <span class="badge bg-secondary" th:text="'Ruta #' + ${e.idRuta}">Ruta</span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-warning">
+                                        <i class="fas fa-clock"></i> Programada
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <!-- Botón para abrir modal -->
+                                    <button type="button" class="btn btn-success btn-sm"
+                                            data-bs-toggle="modal"
+                                            th:data-bs-target="'#modalEntrega' + ${e.idEntrega}">
+                                        <i class="fas fa-truck"></i> Completar Entrega
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modales (FUERA de la tabla) -->
+    <div th:each="e : ${entregas}">
+        <div class="modal fade" th:id="'modalEntrega' + ${e.idEntrega}" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: var(--color-primary); color: white;">
+                        <h5 class="modal-title">
+                            <i class="fas fa-shipping-fast"></i>
+                            Completar Entrega #<span th:text="${e.idEntrega}">001</span>
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form th:action="@{/entregas/completar/{id}(id=${e.idEntrega})}" method="post">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-info-circle"></i> Información de la Entrega
+                                </label>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <p><strong>Pedido:</strong> #<span th:text="${e.idPedido}">1</span></p>
+                                        <p><strong>Vehículo:</strong> <span th:text="${e.idVehiculo}">ABC-123</span></p>
+                                        <p class="mb-0"><strong>Ruta:</strong> Ruta #<span th:text="${e.idRuta}">1</span></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-comment"></i> Observaciones
+                                </label>
+                                <textarea class="form-control"
+                                          name="observaciones"
+                                          rows="3"
+                                          placeholder="Ingrese observaciones si las hubiera..."></textarea>
+                            </div>
+
+                            <div class="alert alert-success mb-0">
+                                <i class="fas fa-check-circle"></i>
+                                Al confirmar, esta entrega se marcará como <strong>Completada</strong>.
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="fas fa-times"></i> Cancelar
+                            </button>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-check"></i> Confirmar Entrega
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Información Adicional -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header card-header-custom">
+                    <i class="fas fa-info-circle"></i> Información Importante
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-check-circle fa-2x text-success me-3"></i>
+                                <div>
+                                    <h6 class="mb-0">Verificar Productos</h6>
+                                    <small class="text-muted">Confirme que los productos estén en buen estado</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-signature fa-2x text-primary me-3"></i>
+                                <div>
+                                    <h6 class="mb-0">Obtener Firma</h6>
+                                    <small class="text-muted">Solicite la firma o confirmación del cliente</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-camera fa-2x text-info me-3"></i>
+                                <div>
+                                    <h6 class="mb-0">Documentar</h6>
+                                    <small class="text-muted">Registre cualquier observación relevante</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

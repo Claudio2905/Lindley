@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::content})}">
+<head>
+    <title>Realizar Pedido</title>
+</head>
+<body>
+<div th:fragment="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header card-header-custom">
+                    <i class="fas fa-shopping-cart"></i> Realizar Pedido
+                </div>
+                <div class="card-body">
+                    <!-- Selección de Cliente -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-12">
+                            <label class="form-label">
+                                <i class="fas fa-user"></i> Cliente *
+                            </label>
+                            <select class="form-select" id="selectCliente" required>
+                                <option value="">Seleccione un cliente...</option>
+                                <option th:each="c : ${clientes}"
+                                        th:value="${c.idCliente}"
+                                        th:text="${c.nombreCliente} + ' - ' + ${c.ciudad}">
+                                </option>
+                            </select>
+                            <div class="mt-2">
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle"></i>
+                                    Cliente seleccionado: <strong id="clienteSeleccionado" class="text-primary">Ninguno</strong>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- Agregar Productos -->
+                    <h5><i class="fas fa-plus-circle"></i> Agregar Productos al Pedido</h5>
+                    <form th:action="@{/pedidos/agregar}" method="post">
+                        <div class="row g-3 align-items-end">
+                            <div class="col-md-5">
+                                <label class="form-label">
+                                    <i class="fas fa-cube"></i> Producto *
+                                </label>
+                                <select class="form-select" name="idProducto" required>
+                                    <option value="">Seleccione un producto...</option>
+                                    <option th:each="p : ${productos}"
+                                            th:value="${p.idProducto}"
+                                            th:text="${p.nombre} + ' - S/ ' + ${p.precioUnitario}">
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label">
+                                    <i class="fas fa-sort-numeric-up"></i> Cantidad *
+                                </label>
+                                <input type="number" class="form-control" name="cantidad" min="1" required>
+                            </div>
+
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-success w-100">
+                                    <i class="fas fa-plus"></i> Agregar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Carrito de Compras -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header card-header-custom">
+                    <i class="fas fa-shopping-basket"></i> Carrito de Compras
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Precio Unitario</th>
+                                <th class="text-center">Cantidad</th>
+                                <th class="text-end">Subtotal</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:if="${carrito.empty}">
+                                <td colspan="4" class="text-center text-muted">
+                                    <i class="fas fa-shopping-cart"></i> El carrito está vacío
+                                </td>
+                            </tr>
+                            <tr th:each="item : ${carrito}">
+                                <td>
+                                    <strong th:text="${item.producto.nombre}">Producto</strong>
+                                    <br>
+                                    <small class="text-muted" th:text="${item.producto.categoria}">Categoría</small>
+                                </td>
+                                <td th:text="'S/ ' + ${item.producto.precioUnitario}">S/ 10.00</td>
+                                <td class="text-center">
+                                    <span class="badge bg-primary" th:text="${item.cantidad}">1</span>
+                                </td>
+                                <td class="text-end">
+                                    <strong th:text="'S/ ' + ${#numbers.formatDecimal(item.subtotal, 1, 2)}">S/ 10.00</strong>
+                                </td>
+                            </tr>
+                            <tr th:if="${!carrito.empty}">
+                                <td colspan="3" class="text-end"><strong>TOTAL:</strong></td>
+                                <td class="text-end">
+                                    <h5 class="mb-0" style="color: var(--color-primary);">
+                                        <strong th:text="'S/ ' + ${#numbers.formatDecimal(#aggregates.sum(carrito.![subtotal]), 1, 2)}">S/ 0.00</strong>
+                                    </h5>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Botones de Acción -->
+                    <div class="d-flex justify-content-between mt-3" th:if="${!carrito.empty}">
+                        <form th:action="@{/pedidos/limpiar}" method="post">
+                            <button type="submit" class="btn btn-secondary">
+                                <i class="fas fa-trash"></i> Limpiar Carrito
+                            </button>
+                        </form>
+
+                        <form th:action="@{/pedidos/confirmar}" method="post" id="formConfirmar">
+                            <input type="hidden" name="idCliente" id="hiddenIdCliente">
+                            <button type="submit" class="btn btn-success btn-lg" id="btnConfirmar">
+                                <i class="fas fa-check"></i> Confirmar Pedido
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

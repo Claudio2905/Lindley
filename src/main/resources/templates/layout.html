@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="layout (content)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Lindley - Gestión de Almacén y Distribución</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --color-primary: #DC143C;
+            --color-secondary: #1E90FF;
+            --color-success: #228B22;
+            --color-warning: #FF8C00;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .navbar-custom {
+            background: linear-gradient(135deg, var(--color-primary) 0%, #B31234 100%);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: white !important;
+        }
+
+        .nav-link {
+            color: rgba(255,255,255,0.9) !important;
+            transition: all 0.3s;
+        }
+
+        .nav-link:hover {
+            color: white !important;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary-custom {
+            background-color: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+
+        .btn-primary-custom:hover {
+            background-color: #B31234;
+            border-color: #B31234;
+        }
+
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header-custom {
+            background: linear-gradient(135deg, var(--color-primary) 0%, #B31234 100%);
+            color: white;
+            font-weight: bold;
+            border-radius: 10px 10px 0 0 !important;
+        }
+
+        .table {
+            background-color: white;
+        }
+
+        .table thead {
+            background-color: var(--color-secondary);
+            color: white;
+        }
+
+        .alert {
+            border-radius: 8px;
+            border: none;
+        }
+
+        .footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            margin-top: auto;
+
+        }
+    </style>
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/lindley/">
+            <i class="fas fa-warehouse"></i> Sistema Lindley
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/lindley/"><i class="fas fa-home"></i> Inicio</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-boxes"></i> Inventario
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/lindley/ingresos">Registrar Ingreso</a></li>
+                        <li><a class="dropdown-item" href="/lindley/disponibilidad">Consultar Disponibilidad</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-shopping-cart"></i> Pedidos
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/lindley/pedidos/nuevo">Realizar Pedido</a></li>
+                        <li><a class="dropdown-item" href="/lindley/pedidos/consultar">Consultar Órdenes</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-truck"></i> Entregas
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/lindley/entregas/gestionar">Gestionar Entregas</a></li>
+                        <li><a class="dropdown-item" href="/lindley/entregas/confirmar">Confirmar Recepción</a></li>
+                        <li><a class="dropdown-item" href="/lindley/entregas/entregar">Entrega de Productos</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/lindley/incidencias">
+                        <i class="fas fa-exclamation-triangle"></i> Incidencias
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Contenido Principal -->
+<div class="container-fluid mt-4">
+    <!-- Mensajes Flash -->
+    <div th:if="${mensaje}" th:class="'alert alert-' + ${tipo ?: 'info'} + ' alert-dismissible fade show'" role="alert">
+        <i th:class="'fas ' + ${tipo == 'success' ? 'fa-check-circle' : (tipo == 'error' ? 'fa-times-circle' : 'fa-info-circle')}"></i>
+        <span th:text="${mensaje}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Contenido dinámico -->
+    <div th:replace="${content}"></div>
+</div>
+
+<!-- Footer -->
+<footer class="footer text-center">
+    <div class="container">
+        <p class="mb-0">
+            <strong>Sistema de Gestión - Arca Continental Lindley</strong><br>
+            © 2025 - Todos los derechos reservados
+        </p>
+    </div>
+</footer>
+<script>
+
+    // Ejecutar inmediatamente sin esperar DOMContentLoaded
+    (function() {
+
+        // Intentar obtener elementos inmediatamente
+        function inicializar() {
+
+            const selectCliente = document.getElementById('selectCliente');
+            const hiddenIdCliente = document.getElementById('hiddenIdCliente');
+            const clienteSeleccionado = document.getElementById('clienteSeleccionado');
+            const btnConfirmar = document.getElementById('btnConfirmar');
+            const formConfirmar = document.getElementById('formConfirmar');
+
+            if (!selectCliente) {
+                return;
+            }
+
+
+            // Función para actualizar el cliente seleccionado
+            function actualizarCliente() {
+                const idCliente = selectCliente.value;
+                const textoCliente = selectCliente.options[selectCliente.selectedIndex].text;
+
+
+                if (idCliente && hiddenIdCliente && clienteSeleccionado) {
+                    hiddenIdCliente.value = idCliente;
+                    clienteSeleccionado.textContent = textoCliente;
+                } else if (hiddenIdCliente && clienteSeleccionado) {
+                    hiddenIdCliente.value = '';
+                    clienteSeleccionado.textContent = 'Ninguno';
+                }
+            }
+
+            // Agregar evento change
+            selectCliente.addEventListener('change', function() {
+                actualizarCliente();
+            });
+
+            // Manejar confirmación
+            if (btnConfirmar && formConfirmar) {
+                btnConfirmar.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    const idCliente = hiddenIdCliente ? hiddenIdCliente.value : '';
+
+                    if (!idCliente) {
+                        alert('Por favor, seleccione un cliente antes de confirmar el pedido.');
+                        selectCliente.focus();
+                        return;
+                    }
+
+                    if (confirm('¿Está seguro de confirmar este pedido?')) {
+                        formConfirmar.submit();
+                    }
+                });
+            }
+
+            // Actualizar al inicio
+            actualizarCliente();
+            console.log('✓ Inicialización completada');
+        }
+
+        // Intentar inicializar inmediatamente
+        if (document.readyState === 'loading') {
+            console.log('Documento aún cargando, esperando DOMContentLoaded...');
+            document.addEventListener('DOMContentLoaded', inicializar);
+        } else {
+            console.log('Documento ya cargado, inicializando inmediatamente...');
+            inicializar();
+        }
+    })();
+</script>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

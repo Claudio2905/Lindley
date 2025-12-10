@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::content})}">
+<head>
+    <title>Registrar Ingreso de Productos</title>
+</head>
+<body>
+<div th:fragment="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header card-header-custom">
+                    <i class="fas fa-box-open"></i> Registrar Ingreso de Productos
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/ingresos/registrar}" method="post" th:object="${ingreso}">
+                        <div class="row g-3">
+                            <!-- Producto -->
+                            <div class="col-md-3">
+                                <label class="form-label">
+                                    <i class="fas fa-cube"></i> Producto *
+                                </label>
+                                <select class="form-select" th:field="*{idProducto}" required>
+                                    <option value="">Seleccione...</option>
+                                    <option th:each="p : ${productos}"
+                                            th:value="${p.idProducto}"
+                                            th:text="${p.nombre}">
+                                    </option>
+                                </select>
+                            </div>
+
+                            <!-- Cantidad -->
+                            <div class="col-md-2">
+                                <label class="form-label">
+                                    <i class="fas fa-sort-numeric-up"></i> Cantidad *
+                                </label>
+                                <input type="number" class="form-control"
+                                       th:field="*{cantidad}" min="1" required>
+                            </div>
+
+                            <!-- Fecha de Ingreso -->
+                            <div class="col-md-3">
+                                <label class="form-label">
+                                    <i class="fas fa-calendar"></i> Fecha de Ingreso
+                                </label>
+                                <input type="text" class="form-control"
+                                       th:value="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy HH:mm')}"
+                                       readonly>
+                            </div>
+
+                            <!-- Lote -->
+                            <div class="col-md-2">
+                                <label class="form-label">
+                                    <i class="fas fa-barcode"></i> Lote *
+                                </label>
+                                <input type="text" class="form-control"
+                                       th:field="*{lote}" required>
+                            </div>
+
+                            <!-- Ubicación -->
+                            <div class="col-md-2">
+                                <label class="form-label">
+                                    <i class="fas fa-map-marker-alt"></i> Ubicación *
+                                </label>
+                                <input type="text" class="form-control"
+                                       th:field="*{ubicacion}" required>
+                            </div>
+                        </div>
+
+                        <!-- Botón -->
+                        <div class="mt-4 text-end">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-save"></i> Registrar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de ingresos recientes -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header card-header-custom">
+                    <i class="fas fa-history"></i> Ingresos Recientes
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Fecha</th>
+                                <th>Ubicación</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:if="${ingresos.empty}">
+                                <td colspan="4" class="text-center text-muted">
+                                    <i class="fas fa-inbox"></i> No hay ingresos registrados
+                                </td>
+                            </tr>
+                            <tr th:each="ing : ${ingresos}">
+                                <td th:text="${ing.idProducto}">Producto</td>
+                                <td th:text="${ing.cantidad}">100</td>
+                                <td th:text="${#temporals.format(ing.fechaIngreso, 'dd/MM/yyyy HH:mm')}">
+                                    01/12/2025
+                                </td>
+                                <td th:text="${ing.ubicacion}">A-01</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::content})}">
+<head>
+    <title>Inicio - Sistema Lindley</title>
+</head>
+<body>
+<div th:fragment="content">
+    <!-- Hero Section -->
+    <div class="jumbotron text-center bg-white p-5 rounded shadow-sm mb-4">
+        <h1 class="display-4" style="color: #DC143C;">
+            <i class="fas fa-warehouse"></i> Sistema de Gestión de Almacén y Distribución
+        </h1>
+        <p class="lead text-muted">Arca Continental Lindley</p>
+        <hr class="my-4">
+        <p>Gestión eficiente de inventarios, pedidos y distribución</p>
+    </div>
+
+    <!-- Tarjetas de módulos -->
+    <div class="row g-4">
+        <!-- Registrar Ingreso -->
+        <div class="col-md-6 col-lg-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-box-open fa-4x" style="color: #228B22;"></i>
+                    </div>
+                    <h5 class="card-title">Registrar Ingreso</h5>
+                    <p class="card-text">Registrar entrada de productos al almacén</p>
+                    <a href="/lindley/ingresos" class="btn btn-primary-custom">
+                        <i class="fas fa-arrow-right"></i> Acceder
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Consultar Disponibilidad -->
+        <div class="col-md-6 col-lg-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-search fa-4x" style="color: #1E90FF;"></i>
+                    </div>
+                    <h5 class="card-title">Consultar Disponibilidad</h5>
+                    <p class="card-text">Verificar stock de productos en inventario</p>
+                    <a href="/lindley/disponibilidad" class="btn btn-primary-custom">
+                        <i class="fas fa-arrow-right"></i> Acceder
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Realizar Pedido -->
+        <div class="col-md-6 col-lg-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-shopping-cart fa-4x" style="color: #FF8C00;"></i>
+                    </div>
+                    <h5 class="card-title">Realizar Pedido</h5>
+                    <p class="card-text">Crear nuevos pedidos de clientes</p>
+                    <a href="/lindley/pedidos/nuevo" class="btn btn-primary-custom">
+                        <i class="fas fa-arrow-right"></i> Acceder
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Consultar Órdenes -->
+        <div class="col-md-6 col-lg-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-clipboard-list fa-4x" style="color: #8B008B;"></i>
+                    </div>
+                    <h5 class="card-title">Consultar Órdenes</h5>
+                    <p class="card-text">Ver detalles de órdenes de distribución</p>
+                    <a href="/lindley/pedidos/consultar" class="btn btn-primary-custom">
+                        <i class="fas fa-arrow-right"></i> Acceder
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gestionar Entregas -->
+        <div class="col-md-6 col-lg-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-truck-loading fa-4x" style="color: #008B8B;"></i>
+                    </div>
+                    <h5 class="card-title">Gestionar Entregas</h5>
+                    <p class="card-text">Administrar entregas programadas</p>
+                    <a href="/lindley/entregas/gestionar" class="btn btn-primary-custom">
+                        <i class="fas fa-arrow-right"></i> Acceder
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Confirmar Recepción -->
+        <div class="col-md-6 col-lg-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-check-circle fa-4x" style="color: #4682B4;"></i>
+                    </div>
+                    <h5 class="card-title">Confirmar Recepción</h5>
+                    <p class="card-text">Registrar recepción de productos</p>
+                    <a href="/lindley/entregas/confirmar" class="btn btn-primary-custom">
+                        <i class="fas fa-arrow-right"></i> Acceder
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reportar Incidencia -->
+        <div class="col-md-6 col-lg-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-exclamation-triangle fa-4x" style="color: #DC143C;"></i>
+                    </div>
+                    <h5 class="card-title">Reportar Incidencia</h5>
+                    <p class="card-text">Registrar problemas en entregas</p>
+                    <a href="/lindley/incidencias" class="btn btn-primary-custom">
+                        <i class="fas fa-arrow-right"></i> Acceder
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Entrega de Productos -->
+        <div class="col-md-6 col-lg-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-shipping-fast fa-4x" style="color: #228B22;"></i>
+                    </div>
+                    <h5 class="card-title">Entrega de Productos</h5>
+                    <p class="card-text">Completar proceso de entrega</p>
+                    <a href="/lindley/entregas/entregar" class="btn btn-primary-custom">
+                        <i class="fas fa-arrow-right"></i> Acceder
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Información adicional -->
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header card-header-custom">
+                    <i class="fas fa-info-circle"></i> Información del Sistema
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h6><i class="fas fa-building"></i> Empresa</h6>
+                            <p>Arca Continental Lindley</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h6><i class="fas fa-users"></i> Cobertura</h6>
+                            <p>Más de 370,000 clientes a nivel nacional</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h6><i class="fas fa-industry"></i> Plantas</h6>
+                            <p>6 plantas de producción</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
